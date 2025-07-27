@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Department Resource Request System</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s ease;
+      }
+
+      /* Login Page Styles */
+      .login-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        width: 400px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .login-title {
+        color: white;
+        font-size: 28px;
+        font-weight: 300;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .login-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+      }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 25px;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 15px 20px;
+        padding-left: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .input-field::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .input-field:focus {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 18px;
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .login-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .forgot-password {
+        text-align: center;
+      }
+
+      .forgot-password a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s ease;
+      }
+
+      .forgot-password a:hover {
+        color: white;
+      }
+
+      /* Main App Styles */
+      #mainApp {
+        display: none;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
+        width: 100%;
+        animation: fadeIn 0.6s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .navbar {
+        background: linear-gradient(135deg, #1e293b, #334155);
+        color: white;
+        padding: 20px 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .nav-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      .nav-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .user-info {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      /* Stats Cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #64748b;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        transition: all 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .form-title {
+        color: #1e293b;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .form-subtitle {
+        color: #64748b;
+        font-size: 16px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 25px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .main-input,
+      select,
+      textarea {
+        padding: 16px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fafafa;
+      }
+
+      .main-input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #4f46e5;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        transform: translateY(-1px);
+      }
+
+      select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        padding-right: 50px;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .main-button {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        padding: 18px 40px;
+        border-radius: 12px;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .main-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .main-button:hover::before {
+        left: 100%;
+      }
+
+      .main-button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+      }
+
+      /* Table Styles */
+      .table-container {
+        overflow-x: auto;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      th {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 20px 15px;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+      }
+
+      th:first-child {
+        border-top-left-radius: 16px;
+      }
+
+      th:last-child {
+        border-top-right-radius: 16px;
+      }
+
+      td {
+        padding: 18px 15px;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background-color 0.2s ease;
+      }
+
+      tr:hover td {
+        background-color: #f8fafc;
+      }
+
+      tr:last-child td:first-child {
+        border-bottom-left-radius: 16px;
+      }
+
+      tr:last-child td:last-child {
+        border-bottom-right-radius: 16px;
+      }
+
+      .status-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .status-select {
+        padding: 8px 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        min-width: 120px;
+      }
+
+      .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      .pending {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+
+      .approved {
+        background: linear-gradient(135deg, #10b981, #059669);
+      }
+
+      .rejected {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+      }
+
+      .delete-btn {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s ease;
+      }
+
+      .delete-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        transform: translateY(20px);
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+      }
+
+      .logout-btn {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 14px;
+      }
+
+      .logout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+      }
+
+      /* User and Lock Icons */
+      .user-icon:before {
+        content: "👤";
+      }
+
+      .lock-icon:before {
+        content: "🔒";
+      }
+
+      /* Loading Animation */
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Loading Overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .login-container {
+          width: 90%;
+          padding: 30px;
+        }
+
+        .container {
+          padding: 0 15px;
+        }
+
+        .card {
+          padding: 25px;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .nav-content {
+          padding: 0 15px;
+        }
+
+        .nav-title {
+          font-size: 20px;
+        }
+
+        .table-container {
+          font-size: 14px;
+        }
+
+        th,
+        td {
+          padding: 12px 8px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Modern Admin Login -->
+    <div class="login-container" id="loginCard">
+      <div class="login-header">
+        <img
+          src="Sail.jpg"
+          alt="SAIL Logo"
+          style="height: 60px; margin-bottom: 20px"
+        />
+        <h1 class="login-title">Admin Login</h1>
+        <p class="login-subtitle">Department Resource Request System</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <span class="input-icon user-icon"></span>
+          <input
+            type="text"
+            class="input-field"
+            id="adminUsername"
+            placeholder="Username"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon lock-icon"></span>
+          <input
+            type="password"
+            class="input-field"
+            id="adminPassword"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span id="loginText">Login</span>
+        </button>
+
+        <div class="forgot-password">
+          <a href="#">Default: Ankit Kumar / 123</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp">
+      <nav class="navbar">
+        <div class="nav-content">
+          <div class="nav-brand">
+            <h1 class="nav-title">📋 Resource Request System</h1>
+          </div>
+          <div class="nav-info">
+            <span class="user-info"
+              >Welcome, <span id="currentUser"></span
+            ></span>
+            <button onclick="logoutAdmin()" class="logout-btn">Sign Out</button>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalRequests">-</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="pendingRequests">-</div>
+            <div class="stat-label">Pending</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="approvedRequests">-</div>
+            <div class="stat-label">Approved</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="rejectedRequests">-</div>
+            <div class="stat-label">Rejected</div>
+          </div>
+        </div>
+
+        <!-- Request Form Card -->
+        <div class="card">
+          <div class="form-header">
+            <img
+              src="Sail.jpg"
+              alt="SAIL Logo"
+              style="height: 80px; display: block; margin: 0 auto 20px"
+            />
+            <h2 class="form-title">Submit New Request</h2>
+            <p class="form-subtitle">
+              Fill out the form below to request department resources
+            </p>
+          </div>
+
+          <form id="requestForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Department Name</label>
+                <input
+                  type="text"
+                  class="main-input"
+                  id="department"
+                  placeholder="e.g. C&IT Department"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Request Type</label>
+                <select id="requestType" required>
+                  <option value="">Select request type</option>
+                  <option value="Laptop">💻 Laptop</option>
+                  <option value="Printer">🖨️ Printer</option>
+                  <option value="Internet Setup">🌐 Internet Setup</option>
+                  <option value="Software Installation">
+                    💿 Software Installation
+                  </option>
+                  <option value="Office Supplies">📝 Office Supplies</option>
+                  <option value="Maintenance">🔧 Maintenance</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Request Date</label>
+                <input type="date" class="main-input" id="date" required />
+              </div>
+
+              <div class="form-group">
+                <label>Priority Level</label>
+                <select id="priority" required>
+                  <option value="">Select priority</option>
+                  <option value="Low">🟢 Low</option>
+                  <option value="Medium">🟡 Medium</option>
+                  <option value="High">🟠 High</option>
+                  <option value="Urgent">🔴 Urgent</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Description</label>
+                <textarea
+                  id="description"
+                  rows="4"
+                  placeholder="Provide detailed information about your request..."
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="main-button" id="submitBtn">
+              <span id="submitText">Submit Request</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Requests Table Card -->
+        <div class="card">
+          <div class="form-header">
+            <h2 class="form-title">Request Management</h2>
+            <p class="form-subtitle">
+              Review and manage all submitted requests
+            </p>
+          </div>
+
+          <div class="table-container">
+            <table id="requestTable">
+              <thead>
+                <tr>
+                  <th>Department</th>
+                  <th>Type</th>
+                  <th>Priority</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Operation completed successfully!</div>
+
+    <script>
+      // Global variables
+      let authToken = localStorage.getItem("authToken");
+      let currentUser = null;
+
+      const loginForm = document.getElementById("loginForm");
+      const requestForm = document.getElementById("requestForm");
+      const tableBody = document.querySelector("#requestTable tbody");
+      const loginCard = document.getElementById("loginCard");
+      const mainApp = document.getElementById("mainApp");
+      const loadingOverlay = document.getElementById("loadingOverlay");
+
+      // API Configuration
+      const API_BASE = window.location.origin + "/api";
+
+      // Set today's date as default
+      document.getElementById("date").valueAsDate = new Date();
+
+      // Initialize app
+      document.addEventListener("DOMContentLoaded", function () {
+        if (authToken) {
+          verifyToken();
+        }
+      });
+
+      // Utility Functions
+      function showLoading() {
+        loadingOverlay.style.display = "flex";
+      }
+
+      function hideLoading() {
+        loadingOverlay.style.display = "none";
+      }
+
+      function showToast(
+        message = "Operation completed successfully!",
+        isError = false
+      ) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.className = isError ? "toast error show" : "toast show";
+        setTimeout(() => toast.classList.remove("show"), 4000);
+      }
+
+      function showButtonLoading(buttonId, textId, loadingText) {
+        const button = document.getElementById(buttonId);
+        const text = document.getElementById(textId);
+        button.disabled = true;
+        text.innerHTML = `<span class="loading"></span>${loadingText}`;
+      }
+
+      function hideButtonLoading(buttonId, textId, originalText) {
+        const button = document.getElementById(buttonId);
+        const text = document.getElementById(textId);
+        button.disabled = false;
+        text.textContent = originalText;
+      }
+
+      // API Functions
+      async function apiRequest(endpoint, options = {}) {
+        const url = `${API_BASE}${endpoint}`;
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+          },
+          ...options,
+        };
+
+        if (authToken) {
+          config.headers["Authorization"] = `Bearer ${authToken}`;
+        }
+
+        try {
+          const response = await fetch(url, config);
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "An error occurred");
+          }
+
+          return data;
+        } catch (error) {
+          console.error("API Error:", error);
+          throw error;
+        }
+      }
+
+      // Authentication Functions
+      async function verifyToken() {
+        try {
+          showLoading();
+          const response = await apiRequest("/verify");
+          currentUser = response.user;
+          showMainApp();
+          await loadDashboardData();
+        } catch (error) {
+          localStorage.removeItem("authToken");
+          authToken = null;
+          showLoginPage();
+        } finally {
+          hideLoading();
+        }
+      }
+
+      loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        await loginAdmin();
+      });
+
+      async function loginAdmin() {
+        const username = document.getElementById("adminUsername").value;
+        const password = document.getElementById("adminPassword").value;
+
+        showButtonLoading("loginBtn", "loginText", "Logging in...");
+
+        try {
+          const response = await apiRequest("/login", {
+            method: "POST",
+            body: JSON.stringify({ username, password }),
+          });
+
+          authToken = response.token;
+          currentUser = response.user;
+          localStorage.setItem("authToken", authToken);
+
+          showMainApp();
+          await loadDashboardData();
+          showToast("Welcome back! Login successful.", false);
+        } catch (error) {
+          showToast(error.message || "Invalid credentials!", true);
+          document.getElementById("adminPassword").value = "";
+        } finally {
+          hideButtonLoading("loginBtn", "loginText", "Login");
+        }
+      }
+
+      function logoutAdmin() {
+        localStorage.removeItem("authToken");
+        authToken = null;
+        currentUser = null;
+        showLoginPage();
+        showToast("Logged out successfully!");
+      }
+
+      function showLoginPage() {
+        mainApp.style.display = "none";
+        loginCard.style.display = "block";
+        document.body.style.background =
+          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+
+        // Clear login form
+        document.getElementById("adminUsername").value = "";
+        document.getElementById("adminPassword").value = "";
+      }
+
+      function showMainApp() {
+        loginCard.style.display = "none";
+        mainApp.style.display = "block";
+        document.body.style.background =
+          "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)";
+
+        if (currentUser) {
+          document.getElementById("currentUser").textContent =
+            currentUser.username;
+        }
+      }
+
+      // Dashboard Functions
+      async function loadDashboardData() {
+        try {
+          await Promise.all([loadStatistics(), loadRequests()]);
+        } catch (error) {
+          showToast("Error loading dashboard data: " + error.message, true);
+        }
+      }
+
+      async function loadStatistics() {
+        try {
+          const stats = await apiRequest("/stats");
+          document.getElementById("totalRequests").textContent = stats.total;
+          document.getElementById("pendingRequests").textContent =
+            stats.pending;
+          document.getElementById("approvedRequests").textContent =
+            stats.approved;
+          document.getElementById("rejectedRequests").textContent =
+            stats.rejected;
+        } catch (error) {
+          console.error("Error loading statistics:", error);
+        }
+      }
+
+      async function loadRequests() {
+        try {
+          const requests = await apiRequest("/requests");
+          displayRequests(requests);
+        } catch (error) {
+          showToast("Error loading requests: " + error.message, true);
+        }
+      }
+
+      function displayRequests(requests) {
+        tableBody.innerHTML = "";
+
+        requests.forEach((request) => {
+          const row = document.createElement("tr");
+          row.style.animation = "fadeIn 0.5s ease";
+
+          const priorityEmoji = {
+            Low: "🟢",
+            Medium: "🟡",
+            High: "🟠",
+            Urgent: "🔴",
+          };
+
+          const requestDate = new Date(
+            request.request_date
+          ).toLocaleDateString();
+
+          row.innerHTML = `
+            <td><strong>${request.department}</strong></td>
+            <td>${request.request_type}</td>
+            <td>${priorityEmoji[request.priority]} ${request.priority}</td>
+            <td>${request.description}</td>
+            <td>${requestDate}</td>
+            <td>
+              <div class="status-controls">
+                <select class="status-select" onchange="updateStatus(${
+                  request.id
+                }, this.value)">
+                  <option value="Pending" ${
+                    request.status === "Pending" ? "selected" : ""
+                  }>Pending</option>
+                  <option value="Approved" ${
+                    request.status === "Approved" ? "selected" : ""
+                  }>Approved</option>
+                  <option value="Rejected" ${
+                    request.status === "Rejected" ? "selected" : ""
+                  }>Rejected</option>
+                </select>
+                <span class="status-badge ${request.status.toLowerCase()}">${
+            request.status
+          }</span>
+              </div>
+            </td>
+            <td>
+              <button class="delete-btn" onclick="deleteRequest(${
+                request.id
+              })">🗑️ Delete</button>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Request Management Functions
+      requestForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        await submitRequest();
+      });
+
+      async function submitRequest() {
+        const department = document.getElementById("department").value;
+        const request_type = document.getElementById("requestType").value;
+        const priority = document.getElementById("priority").value;
+        const description = document.getElementById("description").value;
+        const request_date = document.getElementById("date").value;
+
+        showButtonLoading("submitBtn", "submitText", "Submitting...");
+
+        try {
+          await apiRequest("/requests", {
+            method: "POST",
+            body: JSON.stringify({
+              department,
+              request_type,
+              priority,
+              description,
+              request_date,
+            }),
+          });
+
+          showToast("🎉 Request submitted successfully!");
+          requestForm.reset();
+          document.getElementById("date").valueAsDate = new Date();
+          await loadDashboardData();
+        } catch (error) {
+          showToast("Error submitting request: " + error.message, true);
+        } finally {
+          hideButtonLoading("submitBtn", "submitText", "Submit Request");
+        }
+      }
+
+      async function updateStatus(requestId, newStatus) {
+        try {
+          await apiRequest(`/requests/${requestId}/status`, {
+            method: "PUT",
+            body: JSON.stringify({ status: newStatus }),
+          });
+
+          const statusEmojis = {
+            Pending: "⏳",
+            Approved: "✅",
+            Rejected: "❌",
+          };
+
+          showToast(
+            `Status updated to ${newStatus} ${statusEmojis[newStatus]}`
+          );
+          await loadDashboardData();
+        } catch (error) {
+          showToast("Error updating status: " + error.message, true);
+          await loadRequests(); // Reload to reset the select
+        }
+      }
+
+      async function deleteRequest(requestId) {
+        if (!confirm("Are you sure you want to delete this request?")) {
+          return;
+        }
+
+        try {
+          await apiRequest(`/requests/${requestId}`, {
+            method: "DELETE",
+          });
+
+          showToast("Request deleted successfully!");
+          await loadDashboardData();
+        } catch (error) {
+          showToast("Error deleting request: " + error.message, true);
+        }
+      }
+
+      // Auto-refresh data every 30 seconds
+      setInterval(async () => {
+        if (authToken && mainApp.style.display !== "none") {
+          try {
+            await loadStatistics();
+          } catch (error) {
+            console.error("Auto-refresh error:", error);
+          }
+        }
+      }, 30000);
+    </script>
+  </body>
+</html>
